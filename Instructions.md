@@ -6,8 +6,8 @@
 
 ### Steps
 1. Download and install Node.js 16.x, which includes npm: https://nodejs.org/en/download/
-2. Create a new public repository on GitHub.com. see "[Create a new repository](https://docs.github.com/en/articles/creating-a-new-repository)."
-3. Clone your repository to your computer. For more information, see "[Cloning a repository](https://docs.github.com/en/articles/cloning-a-repository)."
+2. Create a new public repository on GitHub.com. see [Create a new repository](https://docs.github.com/en/articles/creating-a-new-repository).
+3. Clone your repository to your computer. For more information, see [Cloning a repository](https://docs.github.com/en/articles/cloning-a-repository).
 4. From your terminal, change directories into your new repository.
 5. Open the folder in VS Code or any other IDE (OPTIONAL).
 6. From your terminal, initialize the directory with npm to generate a package.json file.
@@ -104,3 +104,6 @@
     git commit -m "My first action"
     git push  
     ```
+12. Open you github repository in a browser and go to Actions tab.
+13. Open the latest workflow run or trigger a new run.
+14. Expand the `print repo stats` step to see the result.
