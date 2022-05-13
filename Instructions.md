@@ -14,4 +14,89 @@
   ```
   npm init -y
   ```
-7. 
+7. Creating an action metadata file (action.yml)
+```yaml
+name: 'get-repo-stats'
+description: 'Get number of open & closed issues and pull requests'
+inputs:
+  token:
+    description: 'GITHUB_TOKEN'
+outputs:
+  issue_stats:
+    description: 'Number of open and closed issues'
+  pull_request_stats:
+    description: 'Number of open, merged and closed pull requests'
+runs:
+  using: 'node16'
+  main: 'index.js'
+```
+8. Writing the action code (index.js)
+```js
+const core = require('@actions/core')
+const github = require('@actions/github')
+
+async function run() {
+    try{
+        const token = core.getInput('token');
+        const octokit = github.getOctokit(token);
+        const context = github.context;
+
+        const list = await octokit.paginate(octokit.rest.issues.listForRepo, {
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            state: 'all',
+          });
+
+        const issue_stats = { open: 0, closed: 0 }
+        const pull_request_stats = { open: 0, closed: 0, merged: 0 }
+
+            for(const item in list){
+            if('pull_request' in item){
+                if(item.state == 'open') pull_request_stats.open++;
+                else if(item.merged_at == null) pull_request_stats.closed++;
+                else pull_request_stats.merged++;
+            }
+            else{
+                if(item.state == 'open') issue_stats.open++;
+                else issue_stats.closed++;
+            }
+        }
+
+        core.setOutput('pull_request_stats', pull_stats);
+        core.setOutput('issue_stats', issue_stats)
+    } catch (error) {
+        core.setFailed(error.message);
+    }
+}
+
+run();
+```
+9. Install packages
+- Install @actions/core package: `npm install @actions/core`
+- Install @actions/github package: `nmp install @actions/github`
+
+10. Create workflow file in the same repository (.github/workflows/test.yml)
+```yaml
+name: 'get repo stats'
+on:
+  pull_request:
+  issues:
+  push:
+
+jobs:
+  repo-stats:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: get repo stats
+        id: stats
+        uses: ./
+        with:
+          token: ${{secrets.GITHUB_TOKEN}}
+      
+      - name: print repo stats
+        run: |
+          echo "PR stats: ${{ steps.stats.outputs.pull_request_stats }}"
+          echo "PR stats: ${{ steps.stats.outputs.issue_stats }}"
+````
