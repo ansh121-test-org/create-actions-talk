@@ -40,42 +40,41 @@
         const token = getInput('token');
         const octokit = getOctokit(token);
 
-        const issuesAndPulls = await octokit.paginate(octokit.rest.issues.listForRepo, {
+        const list = await octokit.paginate(octokit.rest.issues.listForRepo, {
           owner: context.repo.owner,
           repo: context.repo.repo,
           state: 'all',
         });
 
         const issue_stats = { open: 0, closed: 0 }
+        const pull_request_stats = { open: 0, closed: 0, merged: 0 }
 
-        const pull_stats = { open: 0, closed: 0, merged: 0 }
-
-        for(const item of issuesAndPulls){
-          if('pull_request' in item) {
-            if(item.state == 'open') pull_stats.open ++;
-            else{
-              if(item.merged_at == null) pull_stats.closed ++;
-              else pull_stats.merged ++;
-            }
+        for (const item of list){
+          if ('pull_request' in item) {
+            if (item.state == 'open') pull_request_stats.open++;
+            else if (item.merged_at == null) pull_request_stats.closed++;
+            else pull_request_stats.merged++;
           }
           else {
-            if(item.state == 'open') issue_stats.open ++;
-            else issue_stats.closed ++;
+            if (item.state == 'open') issue_stats.open++;
+            else issue_stats.closed++;
           }
         }
 
-        setOutput('pulls', pull_stats);
-        setOutput('issues', issue_stats);
+        setOutput('pull_request_stats', pull_request_stats);
+        setOutput('issue_stats', issue_stats);
+
       } catch (error) {
         setFailed(error.message);
       }
     }
 
     run();
+
     ```
 9. Install the imported packages
-- Install @actions/core package: `npm install @actions/core@1.8.0`
-- Install @actions/github package: `nmp install @actions/github@5.0.1`
+    - Install @actions/core package: `npm install @actions/core@1.8.0`
+    - Install @actions/github package: `nmp install @actions/github@5.0.1`
 
 10. Create workflow file in the same repository (.github/workflows/test.yml)
     ```yaml
