@@ -3,18 +3,19 @@
 ### Prerequisites 
 1. Set up Git and authenticate GitHub: [Instructions](https://docs.github.com/en/get-started/quickstart/set-up-git)
 2. Any IDE like VS Code.
+3. Download and install Node.js 16.x, which includes npm: https://nodejs.org/en/download/
+
 
 ### Steps
-1. Download and install Node.js 16.x, which includes npm: https://nodejs.org/en/download/
-2. Create a new public repository on GitHub.com. see [Create a new repository](https://docs.github.com/en/articles/creating-a-new-repository).
-3. Clone your repository to your computer. For more information, see [Cloning a repository](https://docs.github.com/en/articles/cloning-a-repository).
-4. From your terminal, change directories into your new repository.
-5. Open the folder in VS Code or any other IDE (OPTIONAL).
-6. From your terminal, initialize the directory with npm to generate a package.json file.
+1. Create a new public repository on GitHub.com. see [Create a new repository](https://docs.github.com/en/articles/creating-a-new-repository).
+2. Clone your repository to your computer. For more information, see [Cloning a repository](https://docs.github.com/en/articles/cloning-a-repository).
+3. From your terminal, change directories into your new repository.
+4. Open the folder in VS Code or any other IDE (OPTIONAL).
+5. From your terminal, initialize the directory with npm to generate a package.json file.
     ```
     npm init -y
     ```
-7. Creating an action metadata file (action.yml)
+6. Creating an action metadata file (action.yml)
     ```yaml
     name: 'get-repo-stats'
     description: 'Get number of open & closed issues and pull requests'
@@ -31,7 +32,7 @@
       using: 'node16'
       main: 'index.js'
     ```
-8. Writing the action code (index.js)
+7. Writing the action code (index.js)
     ```js
     import { getOctokit, context } from '@actions/github';
     import { getInput, setOutput, setFailed } from '@actions/core';
@@ -74,11 +75,11 @@
     run();
 
     ```
-9. Install the imported packages
+8. Install the imported packages
     - Install @actions/core package: `npm install @actions/core@1.8.0`
     - Install @actions/github package: `nmp install @actions/github@5.0.1`
 
-10. Create workflow file in the same repository (.github/workflows/test.yml)
+9. Create workflow file in the same repository (.github/workflows/test.yml)
     ```yaml
     name: 'get repo stats'
     on: [pull_request, issues, push, workflow_dispatch]
@@ -100,12 +101,12 @@
               echo "PR stats: ${{ steps.stats.outputs.pull_request_stats }}"
               echo "PR stats: ${{ steps.stats.outputs.issue_stats }}"
     ````
-11. Commit and push your changes.
+10. Commit and push your changes.
     ```
     git add .
     git commit -m "My first action"
     git push  
     ```
-12. Open you github repository in a browser and go to Actions tab.
-13. Open the latest workflow run or trigger a new run.
-14. Expand the `print repo stats` step to see the result.
+11. Open you github repository in a browser and go to Actions tab.
+12. Open the latest workflow run or trigger a new run.
+13. Expand the `print repo stats` step to see the result.
