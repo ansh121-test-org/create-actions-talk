@@ -21,6 +21,7 @@
     inputs:
       token:
         description: 'GITHUB_TOKEN'
+        required: true
     outputs:
       issue_stats:
         description: 'Number of open and closed issues'
