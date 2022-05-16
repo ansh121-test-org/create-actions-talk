@@ -36,6 +36,7 @@
     import { getOctokit, context } from '@actions/github';
     import { getInput, setOutput, setFailed } from '@actions/core';
 
+    // most @actions toolkit packages have async methods
     async function run() {
       try {
         const token = getInput('token');
